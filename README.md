@@ -27,6 +27,9 @@ its own ad hoc loop.
   per-cell transition rule.
 - **`simulator.BoidsSimulator`**: coordinates boid groups, the spatial grid,
   and predation (a predator close enough to a prey kills it) each step.
+  It also keeps a snapshot of the starting groups and their update
+  schedule, taken when each group is registered, so the GUI's reset button
+  can rebuild the initial state instead of just clearing it.
 
 ## The models
 
@@ -48,21 +51,6 @@ its own ad hoc loop.
 
 `Invader` is the small demo shipped with the course's `gui.jar` to show how
 `Simulable` works; it isn't part of this project's own code.
-
-## A bug this fixes: the reset button emptied the simulation for good
-
-`BoidsSimulator.restart()` used to just clear the groups and the event
-queue. That matches what `Simulable.restart()` is supposed to do, except
-nothing ever repopulated them afterwards: the groups were built once in
-`main()`, not from a method `restart()` could call again, and the
-recurring update events only exist by re-scheduling themselves — once the
-queue is cleared, there's nothing left to bring them back. Pressing
-"Début" left a permanently blank, frozen simulation, Play and Step included.
-
-The fix: `BoidsSimulator` now keeps its own snapshot of the starting groups
-and their update schedule (taken when each group is registered), and
-`restart()` rebuilds from that snapshot instead of leaving an empty state
-behind.
 
 ## Build & run
 
